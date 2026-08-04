@@ -1,0 +1,29 @@
+name: check
+
+# This repo is documentation for a hosted service, so the thing that breaks is
+# not code -- it is drift between what these files claim and what the service
+# actually serves. Both times it has broken, the files were syntactically fine.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # The service can change without anyone touching this repo, which is exactly
+  # how it went stale last time. A weekly run notices on its own.
+  schedule:
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet jsonschema
+      - run: python scripts/check-docs.py
