@@ -1,5 +1,5 @@
 [mcp_servers.ftthelper]
-url = "https://fantasytabletophelper.com/api/mcp"
+url = "https://www.fantasytabletophelper.com/api/mcp"
 
 [mcp_servers.ftthelper.headers]
 Authorization = "Bearer ftth_mcp_YOUR_TOKEN_HERE"
