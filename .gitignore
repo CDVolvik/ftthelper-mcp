@@ -1,0 +1,5 @@
+# Filled-in configs carry a live token. Keep them out of git.
+*.local.json
+*.local.toml
+.env
+.env.*
