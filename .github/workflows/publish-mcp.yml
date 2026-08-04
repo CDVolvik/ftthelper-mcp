@@ -1,0 +1,44 @@
+name: Publish to MCP Registry
+
+# OIDC rather than a token: the workflow proves it is running in a repository
+# owned by kushaim, and the registry grants the io.github.kushaim/* namespace on
+# that basis. No secret is stored, so there is nothing to leak or rotate.
+#
+# There is no package step. This server is hosted, not installed — server.json
+# declares a `remotes` entry and no `packages`, so publishing is metadata only.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # OIDC
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # Publish nothing that fails its own checks. server.json is validated
+      # against the registry schema here, which is cheaper to fix than a bad
+      # public listing.
+      - name: Validate before publishing
+        run: |
+          pip install --quiet jsonschema
+          python scripts/check-docs.py
+
+      - name: Install mcp-publisher
+        run: |
+          curl -L "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" | tar xz mcp-publisher
+
+      - name: Authenticate to MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish
+        run: ./mcp-publisher publish
