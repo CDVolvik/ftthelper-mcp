@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ftthelper": {
+      "type": "http",
+      "url": "https://www.fantasytabletophelper.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${FTTHELPER_MCP_TOKEN}"
+      }
+    }
+  }
+}
