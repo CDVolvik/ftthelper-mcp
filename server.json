@@ -1,12 +1,12 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.kushaim/ftthelper-mcp",
+  "name": "io.github.CDVolvik/ftthelper-mcp",
   "title": "Fantasy Tabletop Helper",
   "description": "Read-only access to your tabletop campaigns: codex, sessions, and session notes.",
   "version": "1.0.0",
   "websiteUrl": "https://www.fantasytabletophelper.com",
   "repository": {
-    "url": "https://github.com/kushaim/ftthelper-mcp",
+    "url": "https://github.com/CDVolvik/ftthelper-mcp",
     "source": "github",
     "id": "1322495152"
   },
