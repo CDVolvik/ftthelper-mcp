@@ -1,8 +1,14 @@
 name: Publish to MCP Registry
 
 # OIDC rather than a token: the workflow proves it is running in a repository
-# owned by kushaim, and the registry grants the io.github.kushaim/* namespace on
-# that basis. No secret is stored, so there is nothing to leak or rotate.
+# owned by CDVolvik, and the registry grants the io.github.CDVolvik/* namespace
+# on that basis. No secret is stored, so there is nothing to leak or rotate.
+#
+# Owner changed 2026-08-05 (kushaim -> CDVolvik). Because OIDC derives the
+# namespace from the repo owner, this workflow can now ONLY publish under
+# io.github.CDVolvik/*. The existing io.github.kushaim/ftthelper-mcp listing
+# (v1.0.0, published 2026-08-04) is therefore no longer updatable from here --
+# running this would create a SECOND registry entry, not move the first one.
 #
 # There is no package step. This server is hosted, not installed — server.json
 # declares a `remotes` entry and no `packages`, so publishing is metadata only.
