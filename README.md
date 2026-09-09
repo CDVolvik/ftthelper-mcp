@@ -12,20 +12,20 @@ so there is nothing to install, clone, or keep running.
 
 - **Endpoint:** `https://www.fantasytabletophelper.com/api/mcp` — keep the `www.`, see [below](#keep-the-www)
 - **Transport:** stateless Streamable HTTP, POST only
-- **Access:** read-only, Hero plan
+- **Access:** Hero plan + PAT (`ftth_mcp_…`). Reads plus controlled writes (proposals / notes / events you authored). Not OAuth — that is a separate issue.
 - **Source:** closed. The app is a commercial product; this repo is the client-side half.
 
 ---
 
-## Read-only, and scoped to you
+## Scoped to you (reads + controlled writes)
 
-Every tool is read-only. Nothing an AI client does over this connection can
-create, edit, or delete anything in your campaign.
+The server queries the database **as you**, not as an administrator. Row-level
+security decides the answer, so it can only ever show what the website would
+show you when logged in.
 
-More importantly, the server queries the database **as you**, not as an
-administrator. Your row-level security policies are what decide the answer, so
-the MCP surface can only ever show what the website would show you when logged
-in:
+Writes exist, and they are bounded: notes and events you authored, recaps you
+submit, and **proposals** for the DM to review. Nothing an AI tool does through
+this connection becomes campaign canon until a DM reviews it in the app.
 
 | | Who sees it |
 |---|---|
@@ -47,6 +47,14 @@ DM's secrets. That is enforced in the database, not in application code.
 | `search_codex` | NPCs, locations, items, lore, religions, cultures, groups |
 | `get_subject` | One codex entry in full, with its relationships |
 | `get_session_notes` | Notes from a single session |
+| `get_session_recap` | Session recap — plus DM prep hooks if you are the DM |
+| `append_session_note` | Add a note (visibility required) |
+| `submit_session_recap` | Save a recap you wrote |
+| `propose_subject` | Propose a codex entry for the DM to review |
+| `propose_relationship` | Propose a link between two existing entries |
+| `list_session_events` | Rolls and combat events you may read |
+| `append_session_event` | Append one typed event (roll / hit / heal…) |
+| `get_session_transcript` | Latest ready transcript — DM only, never the audio |
 
 Factions and guilds are stored as `kind: "group"` — there is no separate
 `faction` kind.
@@ -111,6 +119,7 @@ longer control.
 | `401` | Token is wrong, revoked, or expired. Make a new one. |
 | `503` | We could not open a session for your account. Usually transient; retry. |
 | `403` | Your plan is not Hero. |
+| `429` | Soft rate limit (~60 requests/min per token). Wait for `Retry-After`. |
 | `405` on a GET | Expected. The server is POST-only; your client should be using POST. |
 | Connects, but every tool call returns an error | A server-side configuration problem. Contact support — the server logs these. |
 | A tool returns an empty list | Usually genuine: you have no campaigns yet, or the search matched nothing. |
