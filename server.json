@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.kushaim/ftthelper-mcp",
   "title": "Fantasy Tabletop Helper",
-  "description": "Read-only access to your tabletop campaigns: codex, sessions, and session notes.",
+  "description": "Hero + PAT access to your tabletop campaigns: reads, notes, events, and DM-reviewed proposals.",
   "version": "1.0.0",
   "websiteUrl": "https://www.fantasytabletophelper.com",
   "repository": {
